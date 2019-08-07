@@ -18,18 +18,20 @@ export class NoDiscountPricing implements SingleItemPricingStrategy {
   };
 }
 
-export interface SingleItemDiscounts {
-  [itemId: string]: {
-    quantity: number;
-    price: number;
-  };
+export interface SpecialPriceDiscounts {
+  [itemId: string]: SpecialPriceDiscount;
 }
 
-export class SpecialPrice implements SingleItemPricingStrategy {
-  prices: ItemPrices;
-  discounts: SingleItemDiscounts;
+interface SpecialPriceDiscount {
+  quantity: number;
+  price: number;
+}
 
-  constructor(prices: ItemPrices, discounts: SingleItemDiscounts) {
+export class SpecialPriceStrategy implements SingleItemPricingStrategy {
+  prices: ItemPrices;
+  discounts: SpecialPriceDiscounts;
+
+  constructor(prices: ItemPrices, discounts: SpecialPriceDiscounts) {
     this.prices = prices;
     this.discounts = discounts;
   }
