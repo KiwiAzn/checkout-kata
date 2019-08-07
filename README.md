@@ -1,44 +1,45 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## The story so far
 
-## Available Scripts
+This is my attempt at the [checkout kata](http://codekata.com/kata/kata09-back-to-the-checkout/).
 
-In the project directory, you can run:
+I have previously attempt this kata a month ago. I took a fairly naive approach which resulted in a solution that worked but was not extenisble.
 
-### `npm start`
+This is highlighted by the kata's objective of:
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+> it’s a stealth exercise in decoupling.
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+I gave it another go after getting some feedback and pointers from my mentor.
 
-### `npm test`
+Unfortunately while doing this I forgot to commit on a regular basis, so you'll just have to take my word for how I got to my solution.
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Approach
 
-### `npm run build`
+I initally started a project using [Create React App](https://github.com/facebook/create-react-app) because I didn't want to mess around with setting up Typescript, Jest and everything else that I may of forgotten. I understand it's pretty bloated for something as simple as this kata but I wanted to focus on the kata itself rather than wrangling compilers/transpilers.
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+In saying that you'll have access to all the standard `Create React App` scripts.
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+### I have a hammer and everything is nail
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+My mentor suggested that I checkout (haha) the strategy pattern. The strategy pattern is a really good fit for this particular kata. We can use the special price rule as a stratergy that our shopping cart will use to calculate the total price.
 
-### `npm run eject`
+While creating my solution I created a no discount pricing strategy first, which just returns the quanity multipled by the price. This is used for the first couple of tests which require no special price. This allowed me to focus on the design of the classes and interfaces.
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+I did my best to decouple everything. The `Cart` interface has items, the pricing strategy, a scan method and get total price method. The `ShoppingCart` class implements this interface and also has a scan multiple items method. I decided that the `Cart` should not know about how items are priced as it's only concerns are what items it has and what the total is.
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+I decided that the pricing strategy classes should contain the prices for the items. This allows for greater flexibility for pricing items as you could have different base prices for different strategies. The `NoDiscountStrategy` and `SpecialPriceStrategy` both implement the `SingleItemPricingStrategy` interface. This interface only contains a get price method.
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+The `SpecialPriceStrategy` also contains the special price discounts. This is represented by the `SpecialPriceDiscount` interface which has a quantity and the discounted price.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+Item's are simply represented by a letter as specified by the kata's description. Ideally these would be represented by an interface which would contains the product's SKU. However the single letter representation is fine for this kata.
 
-## Learn More
+### Now what?
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+While this implementation passes all the tests outlined in the kata description, there are still areas of improvment. One example would be to introduce more pricing strategies such as a xx% off the price.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+A more complex example would be a combo pricing strategy where you buy some combonation of items together to get a lower price. This would mean introducing a `GroupPricngStrategy` interface to handle a such a case.
+
+It could be interesting to implement a way that allows for multiple strategies to work together to get the lowest price. Though this is bordering dynamic programming and the strategy pattern may no longer be the correct for it.
+
+Since I have all these React dependencies it could be fun to create a simple frontend to create a checkout app.
+
+It would also worth investigating how I could better represent the items.
