@@ -1,8 +1,8 @@
-import { SingleItemPricingStratergy } from "./pricingStratergies";
+import { SingleItemPricingStrategy } from "./pricingStrategies";
 
 export interface Cart {
   items: Items;
-  singleItemPricingStragery: SingleItemPricingStratergy;
+  singleItemPricingStrategy: SingleItemPricingStrategy;
   scan(id: string): void;
   getCartTotal(): number;
 }
@@ -12,11 +12,11 @@ interface Items {
 }
 
 export class ShoppingCart implements Cart {
-  singleItemPricingStragery: SingleItemPricingStratergy;
+  singleItemPricingStrategy: SingleItemPricingStrategy;
   items: Items;
 
-  constructor(singleItemPricingStragery: SingleItemPricingStratergy) {
-    this.singleItemPricingStragery = singleItemPricingStragery;
+  constructor(singleItemPricingStragery: SingleItemPricingStrategy) {
+    this.singleItemPricingStrategy = singleItemPricingStragery;
     this.items = {};
   }
 
@@ -32,7 +32,7 @@ export class ShoppingCart implements Cart {
     return Object.entries(this.items).reduce((prev, current) => {
       const itemId = current[0];
       const itemCount = current[1];
-      return prev + this.singleItemPricingStragery.getPrice(itemId, itemCount);
+      return prev + this.singleItemPricingStrategy.getPrice(itemId, itemCount);
     }, 0);
   };
 }

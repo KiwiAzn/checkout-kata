@@ -2,11 +2,11 @@ export interface ItemPrices {
   [id: string]: number;
 }
 
-export interface SingleItemPricingStratergy {
+export interface SingleItemPricingStrategy {
   getPrice(itemId: string, quantity: number): number;
 }
 
-export class NoDiscountPricing implements SingleItemPricingStratergy {
+export class NoDiscountPricing implements SingleItemPricingStrategy {
   prices: ItemPrices;
 
   constructor(prices: ItemPrices) {
@@ -25,7 +25,7 @@ export interface SingleItemDiscounts {
   };
 }
 
-export class SpecialPrice implements SingleItemPricingStratergy {
+export class SpecialPrice implements SingleItemPricingStrategy {
   prices: ItemPrices;
   discounts: SingleItemDiscounts;
 

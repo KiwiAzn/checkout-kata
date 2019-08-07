@@ -4,7 +4,7 @@ import {
   NoDiscountPricing,
   SingleItemDiscounts,
   SpecialPrice
-} from "./pricingStratergies";
+} from "./pricingStrategies";
 
 const prices: ItemPrices = {
   A: 50,
