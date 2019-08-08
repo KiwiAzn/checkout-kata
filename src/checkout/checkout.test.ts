@@ -2,8 +2,8 @@ import { ShoppingCart, Cart } from "./checkout";
 import {
   ItemPrices,
   NoDiscountPricing,
-  SingleItemDiscounts,
-  SpecialPrice
+  SpecialPriceDiscounts,
+  SpecialPriceStrategy
 } from "./pricingStrategies";
 
 const prices: ItemPrices = {
@@ -13,7 +13,7 @@ const prices: ItemPrices = {
   D: 15
 };
 
-const discounts: SingleItemDiscounts = {
+const discounts: SpecialPriceDiscounts = {
   A: {
     quantity: 3,
     price: 130
@@ -26,18 +26,18 @@ const discounts: SingleItemDiscounts = {
 
 describe("NoDiscountPricingStragergy", () => {
   it("should return 50 for A of quantity 1", () => {
-    const pricingStragery = new NoDiscountPricing(prices);
+    const pricingStrategy = new NoDiscountPricing(prices);
 
-    expect(pricingStragery.getPrice("A", 1)).toBe(50);
+    expect(pricingStrategy.getPrice("A", 1)).toBe(50);
   });
 });
 
 describe("checkoutKata - No Discount", () => {
   let cart: ShoppingCart;
-  const pricingStragery = new NoDiscountPricing(prices);
+  const pricingStrategy = new NoDiscountPricing(prices);
 
   beforeEach(() => {
-    cart = new ShoppingCart(pricingStragery);
+    cart = new ShoppingCart(pricingStrategy);
   });
 
   it.each`
@@ -55,10 +55,10 @@ describe("checkoutKata - No Discount", () => {
 
 describe("checkoutKata - SinglePrice Discount", () => {
   let cart: ShoppingCart;
-  const pricingStragery = new SpecialPrice(prices, discounts);
+  const pricingStrategy = new SpecialPriceStrategy(prices, discounts);
 
   beforeEach(() => {
-    cart = new ShoppingCart(pricingStragery);
+    cart = new ShoppingCart(pricingStrategy);
   });
 
   it.each`
@@ -81,8 +81,8 @@ describe("checkoutKata - SinglePrice Discount", () => {
 
 describe("checkoutKata - Incremental", () => {
   it("should calculate total incrementally", () => {
-    const pricingStragery = new SpecialPrice(prices, discounts);
-    const cart = new ShoppingCart(pricingStragery);
+    const pricingStrategy = new SpecialPriceStrategy(prices, discounts);
+    const cart = new ShoppingCart(pricingStrategy);
 
     cart.scan("A");
     expect(cart.getCartTotal()).toBe(50);
